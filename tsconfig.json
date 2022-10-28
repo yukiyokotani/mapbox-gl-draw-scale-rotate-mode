@@ -19,5 +19,6 @@
     "declarationMap": true,
     "declarationDir": "dist/types"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/main.base.ts"]
 }
