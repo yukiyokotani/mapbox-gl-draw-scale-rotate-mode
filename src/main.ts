@@ -76,7 +76,8 @@ type ScaleRotateModeOptions = {
 const isRotatePoint = CommonSelectors.isOfMetaType(Constants.meta.MIDPOINT);
 const isVertex = CommonSelectors.isOfMetaType(Constants.meta.VERTEX);
 
-type AdditionalProperties = {
+interface ScaleRotateMode
+  extends DrawCustomMode<ScaleRotateModeState, ScaleRotateModeOptions> {
   pathsToCoordinates: (
     featureId: string,
     paths: string[]
@@ -91,45 +92,48 @@ type AdditionalProperties = {
     radiusScale: number
   ) => void;
   createRotationPoints: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     geojson: Feature,
     suppPoints: MapboxDraw.DrawPoint[]
   ) => Feature[] | undefined;
   startDragging: (
-    this: DrawCustomModeThis,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent | MapTouchEvent
   ) => void;
-  stopDragging: (this: DrawCustomModeThis, state: ScaleRotateModeState) => void;
+  stopDragging: (
+    this: DrawCustomModeThis & this,
+    state: ScaleRotateModeState
+  ) => void;
   onVertex: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent | MapTouchEvent
   ) => void;
   computeRotationCenter: (
-    this: DrawCustomModeThis,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     geojson: GeoJSON
   ) => Feature<Point>;
   onRotatePoint: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent | MapTouchEvent
   ) => void;
   onFeature: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent | MapTouchEvent
   ) => void;
   computeAxes: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     polygon: GeoJSON
   ) => void;
   coordinateIndex: (coordinateIndex: string[]) => number;
   dragRotatePoint: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent,
     delta: {
@@ -138,7 +142,7 @@ type AdditionalProperties = {
     }
   ) => void;
   dragScalePoint: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent,
     delta: {
@@ -147,7 +151,7 @@ type AdditionalProperties = {
     }
   ) => void;
   dragFeature: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent,
     delta: {
@@ -155,28 +159,24 @@ type AdditionalProperties = {
       lat: number;
     }
   ) => void;
-  fireUpdate: (this: DrawCustomModeThis & AdditionalProperties) => void;
+  fireUpdate: (this: DrawCustomModeThis & this) => void;
   clickActiveFeature: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState
   ) => void;
   clickNoTarget: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent
   ) => void;
   clickInactive: (
-    this: DrawCustomModeThis & AdditionalProperties,
+    this: DrawCustomModeThis & this,
     state: ScaleRotateModeState,
     e: MapMouseEvent
   ) => void;
-};
+}
 
-export const scaleRotateMode: DrawCustomMode<
-  ScaleRotateModeState,
-  ScaleRotateModeOptions
-> &
-  AdditionalProperties = {
+export const scaleRotateMode: ScaleRotateMode = {
   onSetup: function (opts) {
     const selectedFeature = this.getSelected()[0];
 
